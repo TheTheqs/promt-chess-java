@@ -31,7 +31,7 @@ public class UI {
 	public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
 	public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
 	public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
-	
+
 	public static void clearScreen() {
 		System.out.print("\033[H\033[2J");
 		System.out.flush();
@@ -58,20 +58,25 @@ public class UI {
 		}
 		System.out.println("  a b c d e f g h");
 	}
-	
+
 	public static void printMatch(ChessMatch chessMatch, List<Chesspiece> captured) {
 		printBoard(chessMatch.getPieces());
 		System.out.println();
 		printCapturedPieces(captured);
 		System.out.println();
 		System.out.println("Turn: " + chessMatch.getTurn());
-		System.out.println("Waiting player " + chessMatch.getCurrentPlayer());
-		if (chessMatch.getCheck()) {
-			System.out.println("CHECK!");
+		if (!chessMatch.getCheckmate()) {
+			System.out.println("Waiting player " + chessMatch.getCurrentPlayer());
+			if (chessMatch.getCheck()) {
+				System.out.println("CHECK!");
+			}
 		}
-		
+		else {
+			System.out.println("CHECKMATE!!\nWinner: " + chessMatch.getCurrentPlayer());
+		}
+
 	}
-	
+
 	public static void printBoard(Chesspiece[][] pieces, boolean[][] possibleMoves) {
 		for (int i = 0; i < pieces.length; i++) {
 			System.out.print((8 - i) + " ");
@@ -98,10 +103,12 @@ public class UI {
 		}
 		System.out.print(" ");
 	}
-	
+
 	private static void printCapturedPieces(List<Chesspiece> captured) {
-		List<Chesspiece> white = captured.stream().filter(x-> x.getColor() == Color.WHITE).collect(Collectors.toList());
-		List<Chesspiece> black = captured.stream().filter(x-> x.getColor() == Color.BLACK).collect(Collectors.toList());
+		List<Chesspiece> white = captured.stream().filter(x -> x.getColor() == Color.WHITE)
+				.collect(Collectors.toList());
+		List<Chesspiece> black = captured.stream().filter(x -> x.getColor() == Color.BLACK)
+				.collect(Collectors.toList());
 		System.out.println("Captured pieces: ");
 		System.out.print("White: ");
 		System.out.print(ANSI_WHITE);
@@ -111,6 +118,6 @@ public class UI {
 		System.out.print(ANSI_YELLOW);
 		System.out.println(Arrays.toString(black.toArray()));
 		System.out.print(ANSI_RESET);
-		
+
 	}
 }
